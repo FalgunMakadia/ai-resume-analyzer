@@ -16,6 +16,7 @@ export default function Home() {
 
     const navigate = useNavigate();
     const { auth, kv } = usePuterStore();
+    const [username, setUsername] = useState("Username");
     const [resumes, setResumes] = useState<Resume[]>([]);
     const [loadingResumes, setLoadingResumes] = useState(false);
 
@@ -23,18 +24,25 @@ export default function Home() {
         if(!auth.isAuthenticated) {
             navigate("/auth?next=/");
         }
+
+        const loadUser = async () => {
+            const user = auth.getUser();
+            if (!user) return;
+
+            setUsername(user.username);
+        }
+        loadUser();
+
     }, [auth.isAuthenticated])
 
     useEffect(() => {
         const loadResumes = async () => {
             setLoadingResumes(true);
             const resumes = (await kv.list("resume:*", true)) as KVItem[];
-            console.log("resumes", resumes);
             const parsedResumes = resumes?.map((resume) => (
                 JSON.parse(resume.value) as Resume
             ));
 
-            console.log(parsedResumes);
             setResumes(parsedResumes || []);
             setLoadingResumes(false);
         }
@@ -48,17 +56,20 @@ export default function Home() {
 
         <section className="main-section">
             <div className="page-heading py-8">
-                <h1>Track your Applications & Resume Ratings</h1>
+                <section>
+                    <h1>Hi {username},</h1>
+                    <h1 className="mt-0 pt-0">Track your Resume Ratings</h1>
+                </section>
                 {!loadingResumes && resumes.length === 0 ? (
                     <h2>No resumes found. Upload your first resume to get feedback.</h2>
                 ) : (
-                    <h2>Review your submissions and check AI-powered feedback</h2>
+                    <h2>Review your previous submissions and AI-powered feedback</h2>
                 )}
             </div>
 
             {loadingResumes && (
                 <div className="flex flex-col items-center justify-center">
-                    <img src="/images/resume-scan-2.gif" alt="Resume" className="w-[200px] "/>
+                    <img src="/images/resume-scan-2.gif" alt="Resume" className="w-[200px]"/>
                 </div>
             )}
 
