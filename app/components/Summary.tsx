@@ -4,7 +4,7 @@ import ScoreBadge from "~/components/ScoreBadge";
 
 const Category = ({ title, score } : {title: string, score: number}) => {
 
-    const textColor : string = score > 70
+    const textColor : string = score > 69
         ? 'text-green-600'
         : score > 49
             ? 'text-yellow-600'

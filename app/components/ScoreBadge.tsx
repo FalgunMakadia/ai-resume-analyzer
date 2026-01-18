@@ -6,7 +6,7 @@ const ScoreBadge: React.FC<ScoreBadgeProps> = ({ score }) => {
     let badgeColor = '';
     let badgeText = '';
 
-    if (score > 70) {
+    if (score > 69) {
         badgeColor = 'bg-badge-green text-green-600';
         badgeText = 'Strong';
     } else if (score > 49) {
