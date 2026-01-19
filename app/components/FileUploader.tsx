@@ -1,6 +1,7 @@
 import {useState, useCallback} from 'react'
 import {useDropzone} from 'react-dropzone'
 import { formatSize } from '../lib/utils'
+import {useNavigate} from "react-router";
 
 interface FileUploaderProps {
     onFileSelect?: (file: File | null) => void;
@@ -14,6 +15,7 @@ const FileUploader = ({ onFileSelect }: FileUploaderProps) => {
     }, [onFileSelect]);
 
     const maxFileSize = 20 * 1024 * 1024; // 20MB in bytes
+    const navigate = useNavigate();
 
     const {getRootProps, getInputProps, isDragActive, acceptedFiles} = useDropzone({
         onDrop,
@@ -45,6 +47,7 @@ const FileUploader = ({ onFileSelect }: FileUploaderProps) => {
                             </div>
                             <button className="p-2 cursor-pointer" onClick={(e) => {
                                 onFileSelect?.(null)
+                                navigate(0);
                             }}>
                                 <img src="/icons/cross.svg" alt="remove" className="w-4 h-4" />
                             </button>

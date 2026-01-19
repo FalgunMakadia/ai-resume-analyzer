@@ -84,6 +84,7 @@ interface AccordionHeaderProps {
     className?: string;
     icon?: ReactNode;
     iconPosition?: "left" | "right";
+    disabled?: boolean;
 }
 
 export const AccordionHeader: React.FC<AccordionHeaderProps> = ({
@@ -92,6 +93,7 @@ export const AccordionHeader: React.FC<AccordionHeaderProps> = ({
                                                                     className = "",
                                                                     icon,
                                                                     iconPosition = "right",
+                                                                    disabled = false,
                                                                 }) => {
     const { toggleItem, isItemActive } = useAccordion();
     const isActive = isItemActive(itemId);
@@ -121,6 +123,7 @@ export const AccordionHeader: React.FC<AccordionHeaderProps> = ({
 
     return (
         <button
+            disabled={disabled}
             onClick={handleClick}
             className={`
         w-full px-4 py-3 text-left

@@ -6,6 +6,7 @@ import {useNavigate} from "react-router";
 import {convertPdfToImage} from "~/lib/pdftoimg";
 import {generateUUID} from "~/lib/utils";
 import {prepareInstructions} from "../../constants";
+import {toast} from "react-toastify";
 
 export const meta = () => ([
     {title: "Resumizer | Upload"},
@@ -27,19 +28,19 @@ const Upload = () => {
     const handleAnalyze = async ({companyName, jobTitle, jobDescription, file}: {companyName: string, jobTitle: string, jobDescription: string, file: File}) => {
         setIsProcessing(true);
 
-        setStatusText("Uploading the file ...");
+        setStatusText("Uploading the file");
         const uploadedFile = await fs.upload([file]);
         if(!uploadedFile) return setStatusText("Error: Failed to upload file");
 
-        setStatusText("Converting the file ...");
+        setStatusText("Converting the file");
         const imageFile = await convertPdfToImage(file);
         if(!imageFile.file) return setStatusText("Error: Failed to convert file");
 
-        setStatusText("Uploading converted file ...")
+        setStatusText("Uploading converted file")
         const uploadedImage = await fs.upload([imageFile.file]);
         if(!uploadedImage) return setStatusText("Error: Failed to upload converted file");
 
-        setStatusText("Preparing data ...");
+        setStatusText("Preparing data");
         const uuid = generateUUID();
 
         const data = {
@@ -52,7 +53,7 @@ const Upload = () => {
             feedback: ''
         }
         await kv.set(`resume:${uuid}`, JSON.stringify(data));
-        setStatusText("Analyzing ...");
+        setStatusText("Analyzing (takes upto 2 minutes)");
 
         const feedback = await ai.feedback(
             uploadedFile.path,
@@ -65,7 +66,14 @@ const Upload = () => {
             ? feedback.message.content
             : feedback.message.content[0].text;
 
-        data.feedback = JSON.parse(feedbackText);
+        try {
+            data.feedback = JSON.parse(feedbackText);
+        } catch (error) {
+            console.error("Error parsing JSON response:", error);
+            toast.error("Error: Resume analysis failed");
+            navigate("/");
+        }
+
         await kv.set(`resume:${uuid}`, JSON.stringify(data));
 
         setStatusText("Analysis complete, redirecting ...");
@@ -92,12 +100,12 @@ const Upload = () => {
         <Navbar />
 
         <section className="main-section">
-            <div className="page-heading py-0">
+            <div className="page-heading py-16">
                 <h1>Smart feedback for your Resume</h1>
                 {isProcessing ? (
                     <>
                         <h2>{statusText}</h2>
-                        <img src="/images/resume-scan.gif" className="w-full" />
+                        <img src="/images/resume-scan.gif" className="w-[450px]" />
                     </>
                 ) : (
                     <h2>Drop your resume for an ATS score and improvement tips</h2>
@@ -111,13 +119,13 @@ const Upload = () => {
                             <input type="text" id="job-title" name="job-title" placeholder="Job Title" />
                         </div>
                         <div className="form-div">
-                            <textarea required={true} rows={5} id="job-description" name="job-description" placeholder="Job Description" />
+                            <textarea required={false} rows={5} id="job-description" name="job-description" placeholder="Job Description" />
                         </div>
                         <div className="form-div">
                             <FileUploader onFileSelect={handleFileSelect} />
                         </div>
 
-                        <button type="submit" className="primary-button">Analyze Resume</button>
+                        <button type="submit" className="primary-button disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-60" disabled={!file}>Analyze Resume</button>
 
                     </form>
                 )}

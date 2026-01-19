@@ -16,7 +16,7 @@ export default function Home() {
 
     const navigate = useNavigate();
     const { auth, kv } = usePuterStore();
-    const [username, setUsername] = useState("Username");
+    const [username, setUsername] = useState("");
     const [resumes, setResumes] = useState<Resume[]>([]);
     const [loadingResumes, setLoadingResumes] = useState(false);
 

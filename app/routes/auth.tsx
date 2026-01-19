@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react'
 import {usePuterStore} from "~/lib/puter";
 import {useLocation, useNavigate} from "react-router";
+import { toast } from "react-toastify";
 
 export const meta = () => ([
     {title: "Resumizer | Authentication"},
@@ -14,9 +15,26 @@ const Auth = () => {
     const next = location.search.split("next=")[1];
     const navigate = useNavigate();
 
+    const handleSignIn = async () => {
+        auth.signIn().then(() => {
+            toast.success("Successfully logged in");
+        }).catch(() => {
+            toast.error("Log in failed");
+        })
+    }
+
+    const handleSignOut = async () => {
+        auth.signOut().then(() => {
+            toast.success("Successfully logged out");
+        }).catch(() => {
+            toast.error("Log out failed");
+        })
+    }
+
     useEffect(() => {
         if(auth.isAuthenticated) {
-            navigate(next);
+            if(next) navigate(next);
+            else navigate("/");
         }
     }, [auth.isAuthenticated, next])
 
@@ -36,11 +54,11 @@ const Auth = () => {
                         ) : (
                             <>
                                 {auth.isAuthenticated ? (
-                                    <button className="auth-button" onClick={auth.signOut}>
+                                    <button className="auth-button" onClick={handleSignOut}>
                                         <p>Log out</p>
                                     </button>
                                 ) : (
-                                    <button className="auth-button" onClick={auth.signIn}>
+                                    <button className="auth-button" onClick={handleSignIn}>
                                         <p>Log in</p>
                                     </button>
                                 )}
