@@ -25,7 +25,6 @@ const Resume = () => {
     useEffect(() => {
         const loadResume = async () => {
             const resume = await kv.get(`resume:${id}`);
-
             if(!resume) return;
 
             const data = JSON.parse(resume);
@@ -40,8 +39,8 @@ const Resume = () => {
             const imageBlob = await fs.read(data.imagePath);
             if(!imageBlob) return;
             const imageUrl = URL.createObjectURL(imageBlob);
-            setImageUrl(imageUrl);
 
+            setImageUrl(imageUrl);
             setFeedback(data.feedback);
         }
 
