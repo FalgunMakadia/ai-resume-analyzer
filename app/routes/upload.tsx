@@ -15,7 +15,7 @@ export const meta = () => ([
 
 const Upload = () => {
 
-    const { auth, isLoading, fs, ai, kv } = usePuterStore();
+    const { fs, ai, kv } = usePuterStore();
     const navigate = useNavigate();
     const [isProcessing, setIsProcessing] = useState(false);
     const [statusText, setStatusText] = useState("");

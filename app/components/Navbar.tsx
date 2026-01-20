@@ -6,7 +6,7 @@ import {toast} from "react-toastify";
 
 const Navbar = () => {
 
-    const { auth, fs, isLoading, kv } = usePuterStore();
+    const { auth } = usePuterStore();
     const [username, setUsername] = useState("Username");
     const navigate = useNavigate();
 
@@ -18,28 +18,6 @@ const Navbar = () => {
         })
         navigate("/auth");
     };
-
-    // const handleDeleteAllResumes = async () => {
-    //     const files = (await fs.readDir("./")) as FSItem[];
-    //
-    //     if (!isLoading && files.length > 0) {
-    //         for (const file of files) {
-    //             await fs.delete(file.path);
-    //         }
-    //         kv.flush().then(() => {
-    //             toast.success('All resumes deleted successfully', {
-    //                 position: "top-right",
-    //                 autoClose: 5000,
-    //             });
-    //         }).catch(() => {
-    //             toast.error('Error: Resumes could not be deleted', {
-    //                 position: "top-right",
-    //                 autoClose: 5000,
-    //             });
-    //         })
-    //     }
-    //
-    // }
 
     useEffect(() => {
         const loadUser = async () => {
@@ -64,8 +42,6 @@ const Navbar = () => {
                     <UserMenu username={username} onLogout={handleLogout}/>
                 </section>
             </nav>
-
-
         </>
     )
 }
