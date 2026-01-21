@@ -18,7 +18,11 @@ const ResumeCard = ({resume: {id, companyName, jobTitle, feedback, imagePath}}: 
             setResumeUrl(url);
         }
 
-        loadResume();
+        loadResume().then(() => {
+            console.log("Success: Resume loaded successfully");
+        }).catch(() => {
+            console.log("Error: Resume loading failed");
+        });
 
     }, [imagePath]);
 
