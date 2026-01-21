@@ -32,7 +32,11 @@ const UserMenu: React.FC<UserMenuProps> = ({ username, onLogout }) => {
                 toast.error("Error loading files: Delete all resumes may not work");
             }
         }
-        loadFiles();
+        loadFiles().then(() => {
+            console.log("Success: Files loaded successfully");
+        }).catch(() => {
+            console.log("Error: Files loading failed");
+        });
     }, []);
 
     const handleDeleteAllResumes = async () => {

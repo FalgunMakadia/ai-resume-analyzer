@@ -26,7 +26,11 @@ const Navbar = () => {
 
             setUsername(user.username);
         }
-        loadUser();
+        loadUser().then(() => {
+            console.log("Success: User loaded successfully");
+        }).catch(() => {
+            console.log("Error: User loading failed");
+        });
     }, [auth.isAuthenticated])
 
     return (
