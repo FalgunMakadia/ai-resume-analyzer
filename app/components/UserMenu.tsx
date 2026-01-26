@@ -29,7 +29,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ username, onLogout }) => {
                 setFiles(files);
             } catch (error) {
                 console.error("Failed to load files:", error);
-                toast.error("Error loading files: Delete all resumes may not work");
+                // toast.error("Error loading files: Delete all resumes may not work");
             }
         }
         loadFiles().then(() => {
